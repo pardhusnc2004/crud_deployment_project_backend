@@ -17,6 +17,19 @@ studentRoute.get('/', (req, res) => {
     })
 })
 
+studentRoute.get('/searchbyname/:partialName', async (req, res) => {
+    try {
+      const partialName = req.params.partialName.trim();
+      const regex = new RegExp(partialName, 'i'); // Case-insensitive regex
+      const movies = await studentschema.find({ name: regex });
+      res.json(movies);
+    } catch (error) {
+      console.error('No Item');
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+  });
+
+
 studentRoute.route('/update-student/:id')
 .get((req, res) => {
     studentschema.findById(mongoose.Types.ObjectId(req.params.id), (err, data) => {
